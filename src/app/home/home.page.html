@@ -1,20 +1,531 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+
+
+<div style="background: rgba(0, 0, 0, 0.459);width: 100%;height: 100%;position: absolute;display: flex;justify-content: center;z-index: 15;" *ngIf="form_reservar">
+  <div class="alerta_no">
+
+    <ion-list style="margin-top:-2%">
+      <ion-radio-group value="biff">
+        <ion-list-header>
+          <ion-label style="font-size:16px;margin: 0;">Escoja su almuerzo </ion-label>
+        </ion-list-header>
+
+        <ion-item *ngFor="let item of array_consecionarias_horarios" (click)="opcion_escogida = item;">
+          <ion-label>{{this.item[this.dia_semana]}}</ion-label>
+          <ion-radio slot="start"></ion-radio>
+        </ion-item>
+
+
+
+
+
+
+      </ion-radio-group>
+    </ion-list>
+
+    <ion-list style="margin-top:-2%">
+      <ion-radio-group value="biff">
+        <ion-list-header>
+          <ion-label style="font-size:16px;margin: 0;">{{texto_cambiante}} 🥣</ion-label>
+        </ion-list-header>
+
+        <div *ngIf="sopess">
+        <ion-item (click)="entrada = 'Caldo';calcular_importe()">
+          <ion-label>Caldo</ion-label>
+          <ion-radio slot="start" value="biff"></ion-radio>
+        </ion-item>
+
+        <ion-item (click)="entrada = 'Segundo';calcular_importe()">
+          <ion-label>Segundo</ion-label>
+          <ion-radio slot="start" value="griff"></ion-radio>
+        </ion-item>
+
+      </div>
+
+        <ion-item (click)="entrada = 'Completo';calcular_importe()">
+          <ion-label>Completo</ion-label>
+          <ion-radio slot="start" value="lii"></ion-radio>
+        </ion-item>
+
+
+      </ion-radio-group>
+    </ion-list>
+
+
+
+    <div style="display: flex;justify-content:center;width: 100%; flex-wrap: wrap;margin-top:2%">
+
+      <div style="border-radius: 8px;width: 80%;height: 30px;background: rgba(16, 116, 199, 0.788);display: grid;grid-template-columns: 70% 30%;">
+        <h1 style="grid-column: 1;color:#fff;font-size: 16px;line-height: 30px;margin: 0;text-align: center;">IMPORTE</h1> <h1 style="grid-column: 2;color:#fff;font-size: 16px;line-height: 30px;margin: 0;text-align: center;border-left: 1px solid #fff;">S/{{importe_total}}</h1>
+      </div>
+
+    <button (click)="entrada = 'Si';descuento_planilla_new = 'Si';form_reservar = false;">Cancelar</button>
+    <button style=" font-weight: 600;" (click)="form_reservar = false;presentLoading();obtener_firma()">Aceptar</button>
+
+  </div>
+
+  </div>
+
+
+  </div>
+
+
+
+
+<div style="{{width}}"  class="h_">
+
+  <h1 style="text-align:center">
+  <button (click)="width = 'margin-top:400%'" style="width: 50px;
+  border-radius: 8px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.808);">
+    <i (click)="width='margin-top:400%'" style="color:#fff;font-size:20px" class="fa-solid fa-arrow-turn-down"></i>
+
+</button>
+</h1>
+
+  <h1 style="text-align:center">
+
+
+  <h1 style="text-align:center;color:#000">Historial de consumo</h1>
+
+
+  <div style="overflow-y: hidden;width: 95%;height: 65%;margin-top: 5%;display: inline-block;margin-left: 2%" >
+    <div style="overflow-x: hidden;height: 100%;width: 250%;">
+    <table matTableExporter  style="background: rgba(0, 0, 0, 0.521);width: 100%;height:100%;position:sticky;"mat-table [dataSource]="arra_consumo" >
+
+      <!-- Position Column -->
+
+      <ng-container ngSwit matColumnDef="index">
+        <th style="color:#fff;text-align: center;" mat-header-cell *matHeaderCellDef mat-sort-header> N". </th>
+        <td style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{arra_consumo.indexOf(element) + 1}} </td>
+      </ng-container>
+
+      <ng-container ngSwit matColumnDef="dni">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> DNI. </th>
+        <td style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.dni}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="nombres_apellidos">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Nombres </th>
+        <td  style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.nombres_apellidos}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="concesionaria">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Concesionaria </th>
+        <td  style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.consecionaria}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="hora">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Hora </th>
+        <td  style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.hora}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="reservado">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Reservado </th>
+        <td  style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.reservado}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="descuento_planilla">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Descuento Planilla</th>
+        <td  style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.descuento_planilla}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="entrada">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Tipo de almuerzo </th>
+        <td  style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.entrada}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="numero_telf">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Telefono </th>
+        <td style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.numero_telf}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="almuerzo">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Almuerzo </th>
+        <td style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.almuerzo}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="importe_total">
+        <th style="color:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Importe </th>
+        <td style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.importe_total}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fecha">
+        <th style="color:#fff;text-align: center;width:12%" mat-header-cell *matHeaderCellDef> Fecha </th>
+        <td style="color:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+  </div>
+
+
+
+</h1>
+
+
+</div>
+
+<ion-menu side="start" menuId="first" contentId="main" *ngIf="reservar">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title style="background-color:rgb(12, 12, 12)">Menu</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item (click)="width = 'margin-top:0%'; ver_historial_consumo()">Ver historial de consumo</ion-item>
+      <ion-item (click)="presentAlertPrompt()" >Cambiar contraseña</ion-item>
+      <ion-item  (click)="cerrar_sesion()"s>Cerrar sesion</ion-item>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+
+<div style="width: 100%; height:100%" id="main"*ngIf="reservar" >
+<div style="height:100%;width:100%;background: #141414;overflow-x: hidden"  class="reservar" >
+  <i (click)="openFirst()" style="   position: absolute;
+  font-size: 25px;
+  margin-top: 3%;
+  margin-left: 3%;color:#fff" class="fa-solid fa-bars"></i>
+  <div style="width:100%;height:35px;border:1px solid rgba(0, 0, 0, 0.603);display: flex;justify-content: center;">
+
+  <div style="display: flex;flex-wrap: wrap;justify-content:center;margin-top: 6%;width: 79%;">
+
+      <div  style="width:80px;height:80px;background-color:#fff;border-radius: 50%;">
+
+        <i style="color: #1c1c1c;font-size: 50px;line-height: 70px;text-align: center;width: 100%;" class="fa-solid fa-user-astronaut"></i>
+
+      </div>
+    <h1 style="text-align: center;margin: 0;margin-top: 6px;width: 72%;font-size: 24px;color:#fff;text-shadow: 0 0 5px #000">{{usuario_comprobado.any.nombres_apellidos}}</h1>
+
+ </div>
+ <i style="font-weight: 900;font-size: 49px;margin-left: 76%;
+ margin-top: 4%;color:#fff;
+ position: absolute;" class="fa-solid {{clase_icono}}"></i>
+
   </div>
-</ion-content>
+
+  <div style="background:#e5e9f0;height: 100%;margin-top:26%;border-top-left-radius: 30px;border-top-right-radius: 30px;">
+  <div style="height:100%;;display:flex;width: 100%;background: #0000;flex-wrap: wrap;justify-content:center">
+
+
+    <div style="width: 100%;display: flex;margin-top:5%;height:60%;overflow-y: hidden;">
+
+<div style="min-width:60%;max-width:60%;display: flex;justify-content:center;flex-wrap: wrap;margin-right: 5%;margin-left: 5%;" *ngFor="let item of array_consecionarias_horarios">
+      <h1 style="    color: #fff; background: #000;border-radius: 5px;width: 54%;text-align: center;font-size: 22px;    margin: 0;box-shadow: 0 0 15px #000000a6;
+      background: rgba(0, 0, 0, 0.788);
+    margin-left: 5.5%;">{{item.nombre}}</h1>
+
+      <div  class="pizarra_1">
+
+        <div style="display: flex;overflow-x: hidden;">
+
+        <div style="display: flex;;justify-content: center;font-size: 14px;margin-top: 63%;width: 92%;">
+          <div style="width: 92%;;display: grid;grid-template-columns: 38% 74%;">
+
+            <h3 style="grid-column: 1;grid-row: 1;text-align: center;color: rgba(255, 255, 255, 0.774)">Lunes</h3>
+            <h3 style="grid-column: 1;grid-row: 2;text-align: center;color: rgba(255, 255, 255, 0.774)">Martes</h3>
+            <h3 style="grid-column: 1;grid-row: 3;text-align: center;color: rgba(255, 255, 255, 0.774)">Miercoles</h3>
+            <h3 style="grid-column: 1;grid-row: 4;text-align: center;color: rgba(255, 255, 255, 0.774)">Jueves</h3>
+            <h3 style="grid-column: 1;grid-row: 5;text-align: center;color: rgba(255, 255, 255, 0.774)">Viernes</h3>
+            <h3 style="grid-column: 1;grid-row: 6;text-align: center;color: rgba(255, 255, 255, 0.774)">Sabado</h3>
+            <h3 style="grid-column: 1;grid-row: 7;text-align: center;color: rgba(255, 255, 255, 0.774)">Domingo</h3>
+
+        <h3 style="color: rgba(255, 255, 255, 0.774);text-align: center;grid-row: 1;grid-column: 2;">{{item.lunes}}</h3>
+        <h3 style="color: rgba(255, 255, 255, 0.774);text-align: center;grid-row: 2;grid-column: 2;">{{item.martes}}</h3>
+        <h3 style="color: rgba(255, 255, 255, 0.774);text-align: center;grid-row: 3;grid-column: 2;">{{item.miercoles}}</h3>
+        <h3 style="color: rgba(255, 255, 255, 0.774);text-align: center;grid-row: 4;grid-column: 2;">{{item.jueves}}</h3>
+        <h3 style="color: rgba(255, 255, 255, 0.774);text-align: center;grid-row: 5;grid-column: 2;">{{item.viernes}}</h3>
+        <h3 style="color: rgba(255, 255, 255, 0.774);text-align: center;grid-row: 6;grid-column: 2;">{{item.sabado}}</h3>
+        <h3 style="color: rgba(255, 255, 255, 0.774);text-align: center;grid-row: 7;grid-column: 2;">{{item.domingo}}</h3>
+      </div>
+      </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+</div>
+
+  <h1 style="    height: 9%;
+  font-size: 15px;
+  width: 100%;
+  margin-top: -11%;
+  color: #000;
+  text-align: center;">Las reservaciones terminan a las {{config.hora_fin}}</h1>
+
+  <button class="b_reservar" (click)="reservar_almuerzo()" *ngIf="b_reservar"><h1 style="margin-top: 7px;font-size: 18px;">Reservar</h1></button>
+  <button style="background:rgb(189, 64, 64)"class="b_reservar" (click)="cancelar()" *ngIf="b_cancelar"><h1 style="margin-top: 7px;font-size: 18px;">Cancelar</h1></button>
+
+
+
+  </div>
+
+
+</div>
+
+
+
+</div>
+</div>
+
+<div style="width:100%;height:100%;background:rgba(0, 0, 0, 0.335);position:absolute; ;" *ngIf="encuestar_bot">
+  <div style="width: 71%;
+  margin-top: 29%;
+  height: 45%;
+  border-radius: 18px;
+  background: #fff;
+  margin-left: 14%;">
+    <h2 style="text-align:center;margin:0;color:#000">{{objeto_encuestadora.pregunta}}</h2>
+   <div class="content_start">
+    <i style="color:{{color_1}}" (click)="estrellas = 1;color_1 ='#e1c614'; color_2 = '#000'; color_3 = '#000'; color_4 = '#000'; color_5 = '#000'"  class="fa-solid fa-star"></i>
+    <i style="color:{{color_2}}" (click)="estrellas = 2;color_1 ='#e1c614'; color_2 = '#e1c614'; color_3 = '#000'; color_4 = '#000'; color_5 = '#000'"  class="fa-solid fa-star"></i>
+    <i style="color:{{color_3}}" (click)="estrellas = 3;color_1 ='#e1c614'; color_2 = '#e1c614'; color_3 = '#e1c614'; color_4 = '#000'; color_5 = '#000'" class="fa-solid fa-star"></i>
+    <i style="color:{{color_4}}" (click)="estrellas = 4;color_1 ='#e1c614'; color_2 = '#e1c614'; color_3 = '#e1c614'; color_4 = '#e1c614'; color_5 = '#000'"  class="fa-solid fa-star"></i>
+    <i style="color:{{color_5}}" (click)="estrellas = 5;color_1 ='#e1c614'; color_2 = '#e1c614'; color_3 = '#e1c614'; color_4 = '#e1c614'; color_5 = '#e1c614'"  class="fa-solid fa-star"></i>
+  </div>
+
+  <textarea placeholder="Daganos el por que de su calificacion" [(ngModel)]="respuesta_text"></textarea>
+  <div class="b_c">
+    <button style="border-right:1px solid rgba(13, 65, 133, 0.616)" (click)="encuestar_bot = false">Onmitir</button>
+    <button (click)="subir_respuestas_encuesta()">Terminar</button>
+  </div>
+
+  </div>
+
+
+
+</div>
+
+
+<div class="blur" *ngIf="cambiar_contra">
+  <div class="cuadro">
+  <h2>Contraseña actual</h2>
+    <input style="width: 80%;height:30px" type="text" [(ngModel)]="contra_actual">
+    <h2>Contraseña nueva</h2>
+    <input style="width: 80%;height:30px" type="text"  [(ngModel)]="contra_nueva">
+    <button (click)="cambiar_contrasenaa()" style="height:30px;width:28% ;font-size:18px">Aceptar</button>
+    <button (click)="cambiar_contra = false" style="height:30px;width:28% ;font-size:18px">Cancelar</button>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  <div *ngIf="lectores">
+
+    <h1 style="text-align:center">
+      <button (click)="abrir_lectora()" style="width: 150px;height:150px;box-shadow:  0 0 15px rgba(0, 0, 0, 0.39);border-radius: 40px;">
+        <i style="font-size:55px" class="fa-solid fa-camera"></i>
+      </button>
+    </h1>
+
+    <h1 style="text-align:center; font-family: 'Bebas Neue';color: #1b2e35;">
+
+    <h1 style="display: inline-block;font-size:35px">Leidos {{dataSource_2.length}}</h1>
+  </h1>
+
+    <div  style="overflow-y: hidden;width: 90%;height: 80%;margin-left: 5%;border-radius:8px;box-shadow: 0 0 0 #0000;margin-top: 10%;position: sticky;"  >
+      <table  style="background: #0000;width: 150%;height:40%;position: sticky;"mat-table [dataSource]="dataSource_2"  *ngIf="tabla_bloo">
+
+        <ng-container ngSwit matColumnDef="index">
+          <th style="background:#fff" mat-header-cell *matHeaderCellDef> N". </th>
+          <td style="background:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.index}} </td>
+        </ng-container>
+
+        <ng-container ngSwit matColumnDef="hora">
+          <th style="background:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Hora </th>
+          <td style="background:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.hora}} </td>
+        </ng-container>
+
+        <ng-container ngSwit matColumnDef="dni">
+          <th style="background:#fff;text-align: center;text-align: center" mat-header-cell *matHeaderCellDef> DNI. </th>
+          <td style="background:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.dni}} </td>
+        </ng-container>
+
+        <ng-container ngSwit matColumnDef="reservado">
+          <th style="background:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Reservado </th>
+          <td style="background:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.reservado}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="nombres_apellidos">
+          <th style="background:#fff;text-align: center" mat-header-cell *matHeaderCellDef> Nombres </th>
+          <td  style="background:#fff;text-align: center;padding-left: 0;font-size:12px" mat-cell *matCellDef="let element"> {{element.nombres_apellidos}} </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+
+      </div>
+
+
+      <h1 style="text-align:center">
+      <i (click)="width = 'margin-top:0%'" style="color:#1b2e35"  class="fa-solid fa-arrow-turn-up"></i>
+    </h1>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="asistencia" *ngIf="asistencia">
+  <h1 style="font-size:15px;text-align:center;color: #1b2e35;">Buenos dias {{usuario_comprobado.any.nombres_apellidos}} por favor escanee el codigo QR para confirmar su ingreso de hoy y poder reservar un almuerzo
+  </h1>
+  <h1 style="text-align:center"> <button style="width: 40%;height:35px;font-size: 18px;" class="b_ingresar" (click)="abrir_camara()">Abrir camara</button></h1>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="registro" *ngIf="registro">
+  <h1 class="title_regresar" (click)="login = true;registro = false"><i class="fa-solid fa-circle-arrow-left"></i> Regresar</h1>
+  <div style="margin-top: 10%;" class="inputs">
+
+    <input type="text" placeholder="Nombres y Apellidos" [(ngModel)]="nombres_apellidos">
+    <input type="text" placeholder="Numero de WhatsApp" [(ngModel)]="numero_telf">
+    <input type="text" placeholder="Contraseña" [(ngModel)]="contrasena">
+
+    <button style="margin-top:20%;border-radius:50px;width: 45%;" (click)="registrar()">Registrar</button>
+
+  </div>
+</div>
+
+
+
+<div style="height:100%;width:100%" class="login" *ngIf="login">
+
+
+<div class="cabezal">
+
+  <div style="display: inline-block;height: 200px;width: 200px;line-height: 200px;text-align: center;background-color: #fff;transform: scale(0.35);border-radius: 50%;margin-left: 61%;top: -9%;position: absolute;" class="svg">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svg" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 213.235 241.176" enable-background="new 0 0 213.235 241.176" xml:space="preserve" fill="#0057B8">
+      <path d="M108.581,64.968V14.124l44.007,25.422L108.581,64.968"/>
+      <path fill-opacity="0.9" d="M153.591,92.101V41.258L109.582,66.68L153.591,92.101"/><path d="M155.586,92.062V41.221l44.009,25.42L155.586,92.062"/><path fill-opacity="0.7" d="M200.299,119.14V68.297l-44.004,25.421L200.299,119.14"/><path fill-opacity="0.85" d="M155.586,146.255V95.412l44.009,25.422L155.586,146.255"/><path fill-opacity="0.7" d="M200.299,173.35v-50.844l-44.004,25.422L200.299,173.35"/><path fill-opacity="0.6" d="M155.586,200.482v-50.84l44.009,25.417L155.586,200.482"/><path fill-opacity="0.5" d="M153.591,200.521v-50.84l-44.009,25.418L153.591,200.521"/><path fill-opacity="0.6" d="M108.581,227.696v-50.844l44.007,25.421L108.581,227.696"/><path fill-opacity="0.5" d="M106.62,227.696v-50.844l-44.005,25.421L106.62,227.696"/><path fill-opacity="0.7" d="M61.562,200.553V149.71l44.007,25.423L61.562,200.553"/><path fill-opacity="0.7" d="M59.709,200.56v-50.843l-44.008,25.422L59.709,200.56"/><path fill-opacity="0.7" d="M14.699,173.467v-50.843l44.01,25.42L14.699,173.467"/><path fill-opacity="0.5" d="M59.709,146.235V95.392l-44.008,25.42L59.709,146.235"/><path fill-opacity="0.7" d="M14.699,119.141V68.297l44.01,25.421L14.699,119.141"/><path fill-opacity="0.6" d="M59.709,92.101V41.258L15.701,66.68L59.709,92.101"/><path fill-opacity="0.85" d="M61.562,92.092V41.249l44.007,25.419L61.562,92.092"/>
+      <path fill-opacity="0.9" d="M106.62,64.968V14.124L62.614,39.546L106.62,64.968"/>
+    </svg>
+  </div>
+
+  <div class="reloj"></div>
+
+</div>
+
+<div class="contenido_bajo">
+
+  <h1 style="padding: 30px;font-size: 34px;padding-bottom: 0;margin-bottom: 0;color:#1b2e35">Bienvenido</h1>
+
+<div style="padding-top: 1%;" class="inputs">
+
+  <input type="text" placeholder="DNI" [(ngModel)]="dni">
+  <input type="password" (keydown.enter)="comprobar_usuario()" placeholder="Contraseña" [(ngModel)]="contrasena">
+
+
+</div>
+
+<div style="padding-top:16%" class="inputs">
+  <button class="b_ingresar" style="padding-top:0;margin-top:-7%;background: rgba(0, 0, 0, 0.849)" (click)="comprobar_usuario()">Ingresar</button>
+
+  </div >
+  <h1 style="display: none;margin-left: 10%;margin-top: 12%;">¿No cuentas con una cuenta?</h1> <div style="display: none;" class="b_crear" (click)="login = false;registro = true"><h1 >Crear cuenta</h1></div>
+
+</div>
+
+
+</div>
+
+
+<div class="blur" *ngIf="blur">
+  <div class="cuadro">
+    <h1>¿Reservar {{opcion_escogida[dia_semana]}} como almuerzo?</h1>
+
+    <button (click)="reservar_almuerzo()">Si</button>
+    <button (click)="blur = false">No</button>
+  </div>
+</div>
+
+
+<div class="blur" *ngIf="blur2">
+  <div class="cuadro">
+    <h1>¿Esta seguro de cancelar su reserva?</h1>
+
+    <button (click)="cancelar_reserva()">Si</button>
+    <button (click)="blur2 = false">No</button>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="historial_reservaciones_content"*ngIf="historial_reservaciones">
+  <div class="cabezar_menu"><h1 style="text-align:center;"><i style="font-size:40px;text-align:center" class="fa-solid fa-angle-left"></i></h1></div>
+  <div class="contenido">
+    <div class="div_h"><h1 style="text-align:center;color: #fff;">15-02-2022</h1></div>
+  </div>
+</div>
+
+
