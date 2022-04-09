@@ -1,11 +1,20 @@
 import { Component } from '@angular/core';
-
+import { Component,OnInit,ViewChild } from '@angular/core';
+import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import  SignaturePad  from 'signature_pad/';
+import {ServicioService} from './servicios/servicio.service';
+import { Network, Connection} from '@awesome-cordova-plugins/network/ngx';
+import * as moment from 'moment';
+import { AlertController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
+import { MenuController,Platform } from '@ionic/angular';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
  @ViewChild('firma',{static:true}) signaturePadElement:any;
 
